@@ -1,0 +1,1 @@
+This project is designed to basically take various TV Shows that have been legally downloaded, put them in the appropriate directories, and rename them according to a defined naming convention. At some point I intend it to include a web interface, and perhaps even an android app to configure the service and see what it's done.
