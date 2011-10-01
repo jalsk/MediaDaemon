@@ -1,0 +1,35 @@
+10
+
+dir
+0
+svn+ssh://jalsk@argon/data/svn/projects/MediaDaemon-maven/src/main/java/ws/ip4u
+svn+ssh://jalsk@argon/data/svn
+add
+
+
+
+
+
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+8cfed24c-fa03-4057-8e65-32b5742c4664
+
+mediadaemonmaven
+dir
+
+
+
+add
+
