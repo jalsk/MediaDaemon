@@ -10,7 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import ws.ip4u.mediadaemonmaven.Episode.EpisodeNotMatchedException;
+import ws.ip4u.mediadaemonmaven.FileMover.FileOption;
 
 /**
  *
@@ -18,15 +21,18 @@ import ws.ip4u.mediadaemonmaven.Episode.EpisodeNotMatchedException;
  */
 public class Scanner
 {
+	private Log log = LogFactory.getLog(Scanner.class);
 	private String scanpath;
 	private String torrentPath;
+	private boolean pretend;
 	private List<Series> shows;
 	private static List<Pattern> seasonRegex = Arrays.asList(Pattern.compile("[Ss]eason (\\d+)"));
 
-	public Scanner(String scanpath, String torrentPath)
+	public Scanner(String scanpath, String torrentPath, boolean pretend)
 	{
 		this.scanpath = scanpath;
 		this.torrentPath = torrentPath;
+		this.pretend = pretend;
 	}
 
 	public List<Series> getShows()
@@ -68,7 +74,7 @@ public class Scanner
 									{
 										try
 										{
-											season.addEpisode(new Episode(episodeString, seasonFile));
+											season.addEpisode(new Episode(episodeString, seasonFile, pretend ? FileOption.NOTHING : FileOption.MOVE));
 										}
 										catch(EpisodeNotMatchedException e)
 										{
@@ -93,7 +99,7 @@ public class Scanner
 			{
 				try
 				{
-					Episode e = new Episode(episode, torrentDir);
+					Episode e = new Episode(episode, torrentDir, pretend ? FileOption.NOTHING : FileOption.COPY);
 
 					Series series = null;
 					for(Series s : shows)

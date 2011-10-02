@@ -16,6 +16,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -24,6 +26,7 @@ import org.xml.sax.SAXException;
  */
 public class MediaDaemon
 {
+	private Log log = LogFactory.getLog(MediaDaemon.class);
 	private static final String DEFAULT_API_KEY = "8495C6D0B9081C3C";
 	private static final String DEFAULT_SEARCH_PATH = "/Users/jalsk/Movies/mediaTest/";
 	private static final String DEFAULT_TORRENT_PATH = "/Users/jalsk/torrents/torrents/";
@@ -37,6 +40,7 @@ public class MediaDaemon
 		TORRENT_PATH("torrentPath", "tp", true, "path to finished torrent directory", true, "torrent path"),
 		API_KEY("apiKey", "a", true, "API key for thetvdb.com", true, "api key"),
 		SHOW_FORMAT("showFormat", "sf", false, "show the format for the config file", false, "show format"),
+		PRETEND("pretend", "p", false, "don't actually do anything, just tell what would happen", false, "pretend"),
 		TEST_CONFIG("testConfig", "td", true, "test the config for the specified config file", false, "test config");
 		private String name;
 		private String shortName;
@@ -90,6 +94,7 @@ public class MediaDaemon
 	public static void main(String[] args)
 	{
 		String searchPath = null, torrentPath = null, apiKey = null;
+		boolean pretend = false;
 		BufferedReader br = null;
 		try
 		{
@@ -183,9 +188,14 @@ public class MediaDaemon
 			{
 				torrentPath = DEFAULT_TORRENT_PATH;
 			}
+
+			if(cmd.hasOption(ConfigOptions.PRETEND.shortName))
+			{
+				pretend = true;
+			}
 			//</editor-fold>
 
-			Scanner sc = new Scanner(searchPath, torrentPath);
+			Scanner sc = new Scanner(searchPath, torrentPath, pretend);
 			List<Series> shows = sc.getShows();
 
 			TVDB api = new TVDB(apiKey);
@@ -193,7 +203,6 @@ public class MediaDaemon
 			for(Series show : shows)
 			{
 				api.updateSeriesInformation(show);
-//				System.out.println(show);
 			}
 
 			FileMover fm = new FileMover(new File(searchPath));

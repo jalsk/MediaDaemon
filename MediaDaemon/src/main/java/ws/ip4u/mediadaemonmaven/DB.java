@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 /**
  *
  * @author jalsk
@@ -15,6 +17,7 @@ import java.sql.Statement;
 public class DB
 {
 	private Connection conn;
+	private Log log = LogFactory.getLog(DB.class);
 	private static final String DB_TBL_EPISODES = "episodes";
 	private static final String DB_TBL_SEASON = "season";
 	private static final String DB_TBL_SERIES = "series";

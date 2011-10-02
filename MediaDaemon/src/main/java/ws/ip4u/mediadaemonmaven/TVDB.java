@@ -12,12 +12,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,12 +33,14 @@ import org.xml.sax.SAXException;
  */
 public class TVDB
 {
+	private Log log = LogFactory.getLog(TVDB.class);
 	private String apikey;
 	private String mirrorPath;
 	private Client client;
 	private WebResource service;
 	private DocumentBuilder parser;
 
+	// TODO: change this so that it uses the mirror and caches the data locally until it is expired.
 	public TVDB(String apikey) throws ParserConfigurationException, SAXException, IOException
 	{
 		this.apikey = apikey;
@@ -95,19 +100,31 @@ public class TVDB
 						}
 						else
 						{
-							System.err.println(String.format("Unable to find episode number %d", episodeNumber));
+							log.info(String.format("Unable to find episode number %d", episodeNumber));
 						}
 					}
 					else
 					{
-						System.err.println(String.format("Unable to find season number %d", seasonNumber));
+						log.info(String.format("Unable to find season number %d", seasonNumber));
 					}
 				}
 			}
 		}
-		catch (Exception e)
+		catch (SeriesLookupException e)
 		{
-			System.err.println("Problem parsing data from the episode information provider.\n" + e.getMessage());
+			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage());
+		}
+		catch(ZipException e)
+		{
+			log.error("Problem handling the zip file.\n" + e.getMessage());
+		}
+		catch(IOException e)
+		{
+			log.error("There was a problem with I/O.\n" + e.getMessage());
+		}
+		catch(SAXException e)
+		{
+			log.error("There was a problem parsing the XML File.\n" + e.getMessage());
 		}
 	}
 
@@ -156,7 +173,7 @@ public class TVDB
 		return getTextValue((Element) n, attribute);
 	}
 
-	private int lookupSeriesId(String seriesName) throws Exception
+	private int lookupSeriesId(String seriesName) throws SeriesLookupException, SAXException, IOException
 	{
 		MultivaluedMap mvm = new MultivaluedMapImpl();
 		mvm.add("seriesname", seriesName);
@@ -171,7 +188,7 @@ public class TVDB
 				return getSeriesId(tn);
 			}
 		}
-		throw new Exception("Unable to determine SeriesID");
+		throw new SeriesLookupException("Unable to determine SeriesID");
 	}
 
 	private String getTextValue(Element e, String tagName)
@@ -186,5 +203,13 @@ public class TVDB
 		}
 
 		return textVal;
+	}
+
+	private class SeriesLookupException extends Exception
+	{
+		public SeriesLookupException(String message)
+		{
+			super(message);
+		}
 	}
 }

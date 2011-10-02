@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -15,6 +17,7 @@ import java.util.Map;
  */
 public class Series
 {
+	private Log log = LogFactory.getLog(Series.class);
 	private Integer seriesId;
 	private String showName;
 	private Map<Integer, Season> seasons;
@@ -34,6 +37,7 @@ public class Series
 
 	public Season addSeason(int number)
 	{
+		log.info("Adding a new season to show " + showName + ", " + number);
 		Season s;
 		if(!seasons.containsKey(number))
 		{
@@ -49,11 +53,13 @@ public class Series
 
 	public Season getSeason(int number)
 	{
+		log.info("Getting season " + number);
 		return seasons.get(number);
 	}
 
 	public List<Season> getSeasons()
 	{
+		log.info("Getting all seasons");
 		return Lists.newArrayList(seasons.values());
 	}
 

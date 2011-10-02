@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import ws.ip4u.mediadaemonmaven.FileMover.FileOption;
 
 /**
  *
@@ -16,6 +19,7 @@ import java.util.regex.Pattern;
  */
 public class Episode
 {
+	private Log log = LogFactory.getLog(Episode.class);
 	private Integer id;
 	private Integer seasonId;
 	private Integer seriesId;
@@ -33,16 +37,18 @@ public class Episode
 	private static List<Pattern> noRenameEpisodeRegex = Arrays.asList(
 			Pattern.compile("(.*)\\[(\\d+)x(\\d{2})\\](.*)\\.([\\w]{3})$"),
 			Pattern.compile("(.*)\\.(\\d+)x(\\d{2})(.*)\\.([\\w]{3})$"));
+	private FileOption fileOption;
 
 	// Data/Episode/id
 	// Data/Episode/EpisodeNumber
 	// Data/Episode/SeasonNumber
 	// Data/Episode/EpisodeName
 
-	public Episode(String filename, File parentDir) throws EpisodeNotMatchedException
+	public Episode(String filename, File parentDir, FileOption fileOption) throws EpisodeNotMatchedException
 	{
 		this.parentDir = parentDir;
 		this.filename = filename;
+		this.fileOption = fileOption;
 		if(!(new File(parentDir, filename)).isFile())
 			throw new EpisodeNotMatchedException("Specified item is not a file.");
 		boolean matched = false;
@@ -190,6 +196,11 @@ public class Episode
 	public File getParentDir()
 	{
 		return parentDir;
+	}
+
+	public FileOption getFileOption()
+	{
+		return fileOption;
 	}
 
 	@Override
