@@ -1,4 +1,4 @@
-package ws.ip4u.mediadaemonmaven;
+package ws.ip4u.mediadaemon;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,9 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
-import ws.ip4u.mediadaemonmaven.ConfigurationValidator.ValidationException;
-import ws.ip4u.mediadaemonmaven.FileMover.FileMoveException;
-import ws.ip4u.mediadaemonmaven.MediaDaemon.ConfigOptions;
+import ws.ip4u.mediadaemon.ConfigurationValidator.ValidationException;
+import ws.ip4u.mediadaemon.FileMover.FileMoveException;
+import ws.ip4u.mediadaemon.MediaDaemon.ConfigOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;

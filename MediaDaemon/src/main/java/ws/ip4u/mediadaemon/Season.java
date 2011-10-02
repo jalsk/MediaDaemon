@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ws.ip4u.mediadaemonmaven;
+package ws.ip4u.mediadaemon;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

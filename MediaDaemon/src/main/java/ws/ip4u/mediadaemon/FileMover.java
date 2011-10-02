@@ -1,4 +1,4 @@
-package ws.ip4u.mediadaemonmaven;
+package ws.ip4u.mediadaemon;
 
 import java.io.File;
 import java.io.IOException;

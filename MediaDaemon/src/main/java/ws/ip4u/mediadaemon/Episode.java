@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ws.ip4u.mediadaemonmaven;
+package ws.ip4u.mediadaemon;
 
 import java.io.File;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import ws.ip4u.mediadaemonmaven.FileMover.FileOption;
+import ws.ip4u.mediadaemon.FileMover.FileOption;
 
 /**
  *
