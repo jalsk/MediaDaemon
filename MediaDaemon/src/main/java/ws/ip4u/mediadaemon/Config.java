@@ -113,7 +113,7 @@ public class Config
 			{
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("java -jar MediaDaemon", options);
-				return;
+				throw new ConfigException("Showing help");
 			}
 
 			if(cmd.hasOption(ConfigOptions.TEST_CONFIG.shortName))
