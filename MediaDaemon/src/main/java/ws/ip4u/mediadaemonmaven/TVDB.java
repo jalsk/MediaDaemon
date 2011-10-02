@@ -112,19 +112,19 @@ public class TVDB
 		}
 		catch (SeriesLookupException e)
 		{
-			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage());
+			log.fatal("Problem parsing data from the episode information provider.\n" + e.getMessage());
 		}
 		catch(ZipException e)
 		{
-			log.error("Problem handling the zip file.\n" + e.getMessage());
+			log.fatal("Problem handling the zip file.\n" + e.getMessage());
 		}
 		catch(IOException e)
 		{
-			log.error("There was a problem with I/O.\n" + e.getMessage());
+			log.fatal("There was a problem with I/O.\n" + e.getMessage());
 		}
 		catch(SAXException e)
 		{
-			log.error("There was a problem parsing the XML File.\n" + e.getMessage());
+			log.fatal("There was a problem parsing the XML File.\n" + e.getMessage());
 		}
 	}
 

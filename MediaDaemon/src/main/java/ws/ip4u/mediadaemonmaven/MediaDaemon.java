@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  */
 public class MediaDaemon
 {
-	private Log log = LogFactory.getLog(MediaDaemon.class);
+	private static Log log = LogFactory.getLog(MediaDaemon.class);
 	private static final String DEFAULT_API_KEY = "8495C6D0B9081C3C";
 	private static final String DEFAULT_SEARCH_PATH = "/Users/jalsk/Movies/mediaTest/";
 	private static final String DEFAULT_TORRENT_PATH = "/Users/jalsk/torrents/torrents/";
@@ -132,7 +132,7 @@ public class MediaDaemon
 				}
 				catch(ValidationException e)
 				{
-					System.err.println("Error on line " + lineNo + ":\n" + e.getMessage());
+					log.fatal("Error on line " + lineNo + ":\n" + e.getMessage());
 				}
 				return;
 			}
@@ -214,23 +214,23 @@ public class MediaDaemon
 		//<editor-fold defaultstate="collapsed" desc="catch statements">
 		catch(ParseException e)
 		{
-			System.err.println("Problem parsing the config file.\n" + e.getMessage());
+			log.error("Problem parsing the config file.\n" + e.getMessage());
 		}
 		catch(ParserConfigurationException e)
 		{
-			System.err.println("Problem parsing data from the episode information provider.\n" + e.getMessage());
+			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage());
 		}
 		catch(SAXException e)
 		{
-			System.err.println("Problem parsing data from the episode information provider.\n" + e.getMessage());
+			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage());
 		}
 		catch(IOException e)
 		{
-			System.err.println("Problem parsing data from the episode information provider.\n" + e.getMessage());
+			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage());
 		}
 		catch(FileMoveException e)
 		{
-			System.err.println("Problem moving the files into their appropriate locations.\n" + e.getMessage());
+			log.error("Problem moving the files into their appropriate locations.\n" + e.getMessage());
 		}
 		finally
 		{

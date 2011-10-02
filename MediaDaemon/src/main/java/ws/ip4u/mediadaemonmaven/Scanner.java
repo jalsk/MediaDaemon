@@ -78,7 +78,7 @@ public class Scanner
 										}
 										catch(EpisodeNotMatchedException e)
 										{
-											System.err.println(e.getMessage());
+											log.warn(e.getMessage());
 										}
 									}
 								}
@@ -125,7 +125,7 @@ public class Scanner
 				}
 				catch(EpisodeNotMatchedException e)
 				{
-					System.err.println(e.getMessage());
+					log.warn(e.getMessage());
 				}
 			}
 		}
