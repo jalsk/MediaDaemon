@@ -10,7 +10,6 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,13 +41,13 @@ public class TVDB
 		this.apikey = apikey;
 		client = Client.create();
 		service = client.resource("http://www.thetvdb.com/api");
-		String mirrors = service.path(this.apikey + "/mirrors.xml").accept(MediaType.TEXT_XML).get(String.class);
+//		String mirrors = service.path(this.apikey + "/mirrors.xml").accept(MediaType.TEXT_XML).get(String.class);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		parser = factory.newDocumentBuilder();
-		Document doc = parser.parse(new ByteArrayInputStream(mirrors.getBytes()));
+//		Document doc = parser.parse(new ByteArrayInputStream(mirrors.getBytes()));
 
-		Node mirrorPathNode = doc.getElementsByTagName("mirrorpath").item(0);
+//		Node mirrorPathNode = doc.getElementsByTagName("mirrorpath").item(0);
 //		mirrorPath = mirrorPathNode.getNodeValue();
 	}
 

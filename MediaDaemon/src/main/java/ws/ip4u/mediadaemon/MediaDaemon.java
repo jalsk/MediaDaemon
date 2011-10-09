@@ -16,7 +16,7 @@ import ws.ip4u.mediadaemon.Config.ConfigTestingException;
  *
  * @author jalsk
  */
-public class MediaDaemon
+public final class MediaDaemon
 {
 	private static Log log = LogFactory.getLog(MediaDaemon.class);
 

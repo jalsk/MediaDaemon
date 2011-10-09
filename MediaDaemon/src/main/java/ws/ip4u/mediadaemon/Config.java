@@ -372,7 +372,7 @@ public class Config
 			return sb.toString();
 		}
 
-		public static class ValidationException extends Exception implements Serializable
+		public static class ValidationException extends Exception
 		{
 			public ValidationException(String message)
 			{
