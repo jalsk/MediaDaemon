@@ -88,9 +88,9 @@ public class Config
 		}
 	};
 	//</editor-fold>
-	String searchPath = null, torrentPath = null, apiKey = null;
-	boolean pretend = false, daemon = false;
-	int scanFrequency;
+	private String searchPath = null, torrentPath = null, apiKey = null;
+	private boolean pretend = false, daemon = false;
+	private int scanFrequency;
 
 	public Config(String[] args) throws ConfigException, ConfigTestingException
 	{

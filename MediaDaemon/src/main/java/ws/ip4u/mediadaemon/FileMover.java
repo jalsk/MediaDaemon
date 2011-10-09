@@ -117,7 +117,7 @@ public class FileMover
 		MOVE(true),
 		COPY(true),
 		NOTHING(false);
-		boolean createDirs;
+		public boolean createDirs;
 
 		FileOption(boolean createDirs)
 		{
