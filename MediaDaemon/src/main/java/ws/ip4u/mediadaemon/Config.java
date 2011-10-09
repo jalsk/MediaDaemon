@@ -254,9 +254,9 @@ public class Config
 	{
 		String[] ret = new String[2];
 
-		ret[0] = input.substring(0, input.indexOf("="));
+		ret[0] = input.substring(0, input.indexOf('='));
 
-		ret[1] = input.substring(input.indexOf("=") + 1).substring(1); // cut off the leading quote
+		ret[1] = input.substring(input.indexOf('=') + 1).substring(1); // cut off the leading quote
 		ret[1] = ret[1].substring(0, ret[0].length() - 2); // cut off the trailing quote
 
 		return ret;
@@ -297,11 +297,11 @@ public class Config
 			if(input.isEmpty())
 				return;
 
-			if(input.indexOf("=") < 0)
+			if(input.indexOf('=') < 0)
 				throw new ValidationException("Configuration file must contain key-value pairs separated by '='");
 
-			String key = input.substring(0, input.indexOf("="));
-			String value = input.substring(input.indexOf("=") + 1);
+			String key = input.substring(0, input.indexOf('='));
+			String value = input.substring(input.indexOf('=') + 1);
 
 			if(key.isEmpty())
 				throw new ValidationException("Cannot have a blank key value");

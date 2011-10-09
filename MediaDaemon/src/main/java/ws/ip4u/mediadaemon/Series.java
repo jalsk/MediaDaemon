@@ -88,7 +88,9 @@ public class Series
 			}
 		}
 		else
+		{
 			sb.append("None");
+		}
 
 		return sb.toString();
 	}

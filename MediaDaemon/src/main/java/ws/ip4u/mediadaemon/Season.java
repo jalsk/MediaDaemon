@@ -81,7 +81,9 @@ public class Season
 			}
 		}
 		else
+		{
 			sb.append("None\n");
+		}
 		return sb.toString();
 	}
 }

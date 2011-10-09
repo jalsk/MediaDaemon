@@ -72,7 +72,7 @@ public class TVDB
 			while (enumeration.hasMoreElements())
 			{
 				entry = (ZipEntry) enumeration.nextElement();
-				if (entry.getName().equalsIgnoreCase("en.xml"));
+				if (entry.getName().equalsIgnoreCase("en.xml"))
 				{
 					xmlDoc = parser.parse(zipFile.getInputStream(entry));
 					break;

@@ -40,10 +40,14 @@ public class FileMover
 		if(!oldEpisode.equals(newEpisode))
 		{
 			if(!episode.getFileOption().createDirs && !fixPermissions(oldEpisode))
+			{
 				throw new FileMoveException("Can't set the file as readable and writable.");
+			}
 			log.info("Moving file " + oldEpisode + " to " + newEpisode);
 			if(episode.getFileOption() == FileOption.NOTHING)
+			{
 				log.info("Would have moved file " + oldEpisode.getAbsolutePath() + " to " + newEpisode.getAbsolutePath());
+			}
 			else if(episode.getFileOption() == FileOption.MOVE && !oldEpisode.renameTo(newEpisode))
 			{
 				throw new FileMoveException("Error moving the requested file: " + episode.getParentDir() + " to: " + seasonPath);
