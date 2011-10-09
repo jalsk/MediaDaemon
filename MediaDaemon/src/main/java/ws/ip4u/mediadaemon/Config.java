@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package ws.ip4u.mediadaemon;
 
 import java.io.BufferedReader;
@@ -295,16 +291,22 @@ public class Config
 		{
 			// if the line is empty, disregard it
 			if(input.isEmpty())
+			{
 				return;
+			}
 
 			if(input.indexOf('=') < 0)
+			{
 				throw new ValidationException("Configuration file must contain key-value pairs separated by '='");
+			}
 
 			String key = input.substring(0, input.indexOf('='));
 			String value = input.substring(input.indexOf('=') + 1);
 
 			if(key.isEmpty())
+			{
 				throw new ValidationException("Cannot have a blank key value");
+			}
 
 			boolean foundValue = false;
 			ConfigOptions option = null;
@@ -318,10 +320,14 @@ public class Config
 			}
 
 			if(!foundValue)
+			{
 				throw new ValidationException("Key value: " + key + " is not known.\nValid values are:\n" + getValidKeyValues());
+			}
 
 			if(!value.startsWith("\"") || !value.endsWith("\""))
+			{
 				throw new ValidationException("Value associated with key " + key + " does not begin and end with quotation marks");
+			}
 
 			value = value.substring(0, value.length() - 2);
 
@@ -329,15 +335,21 @@ public class Config
 			{
 				File f = new File(value);
 				if(!f.exists())
+				{
 					throw new ValidationException("Specified " + option.getFriendlyName() + " is not a valid path name.\n"
 												  + "Tested path: " + value);
+				}
 				if(!f.canRead())
+				{
 					throw new ValidationException("Specified " + option.getFriendlyName() + " cannot be read.\n"
 												  + "Tested path: " + value);
+				}
 
 				if(!f.isDirectory())
+				{
 					throw new ValidationException("Specified " + option.getFriendlyName() + " is not a directory.\n"
 												  + "Tested path: " + value);
+				}
 			}
 		}
 
@@ -348,7 +360,9 @@ public class Config
 			for(ConfigOptions co : ConfigOptions.values())
 			{
 				if(co.getInConfig())
+				{
 					sb.append(co.getName()).append(", ");
+				}
 			}
 
 			sb.deleteCharAt(sb.length() - 1); // get rid of the last two characters (the comma and space)

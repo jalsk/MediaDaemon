@@ -28,10 +28,9 @@ public class FileMover
 			{
 				log.info("Would have created directory: " + seasonPath.getAbsolutePath());
 			}
-			else
+			else if(!seasonPath.mkdirs())
 			{
-				if(!seasonPath.mkdirs())
-					throw new FileMoveException("Error creating the directory: " + seasonPath);
+				throw new FileMoveException("Error creating the directory: " + seasonPath);
 			}
 		}
 
@@ -86,9 +85,13 @@ public class FileMover
 	{
 		boolean success = f.canWrite() && f.canRead();
 		if(!f.canWrite())
+		{
 			success = f.setWritable(true);
+		}
 		if(success && !f.canRead())
+		{
 			success = f.setReadable(true);
+		}
 		return success;
 	}
 

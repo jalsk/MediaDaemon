@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package ws.ip4u.mediadaemon;
 
 import java.io.File;
@@ -43,14 +39,15 @@ public class Episode
 	// Data/Episode/EpisodeNumber
 	// Data/Episode/SeasonNumber
 	// Data/Episode/EpisodeName
-
 	public Episode(String filename, File parentDir, FileOption fileOption) throws EpisodeNotMatchedException
 	{
 		this.parentDir = parentDir;
 		this.filename = filename;
 		this.fileOption = fileOption;
 		if(!(new File(parentDir, filename)).isFile())
+		{
 			throw new EpisodeNotMatchedException("Specified item is not a file.");
+		}
 		boolean matched = false;
 		for(Pattern regex : renameEpisodeRegex)
 		{

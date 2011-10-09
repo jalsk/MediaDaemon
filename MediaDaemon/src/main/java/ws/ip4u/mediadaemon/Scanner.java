@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package ws.ip4u.mediadaemon;
 
 import com.google.common.collect.Lists;
@@ -38,7 +34,9 @@ public class Scanner
 	public List<Series> getShows()
 	{
 		if(shows == null)
+		{
 			populateShows();
+		}
 		return this.shows;
 	}
 
