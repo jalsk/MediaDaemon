@@ -15,7 +15,7 @@ import ws.ip4u.mediadaemon.FileMover.FileOption;
  */
 public class Episode
 {
-	private Log log = LogFactory.getLog(Episode.class);
+//	private Log log = LogFactory.getLog(Episode.class);
 	private Integer id;
 	private Integer seasonId;
 	private Integer seriesId;
@@ -234,7 +234,7 @@ public class Episode
 		return temp;
 	}
 
-	public class EpisodeNotMatchedException extends Exception
+	public static class EpisodeNotMatchedException extends Exception
 	{
 		public EpisodeNotMatchedException(String message)
 		{

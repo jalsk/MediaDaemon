@@ -24,7 +24,7 @@ public class FileMover
 	{
 		if(!seasonPath.exists())
 		{
-			if(!episode.getFileOption().createDirs)
+			if(!episode.getFileOption().getCreateDirs())
 			{
 				log.info("Would have created directory: " + seasonPath.getAbsolutePath());
 			}
@@ -38,7 +38,7 @@ public class FileMover
 		File newEpisode = new File(seasonPath, episode.getFormattedName());
 		if(!oldEpisode.equals(newEpisode))
 		{
-			if(!episode.getFileOption().createDirs && !fixPermissions(oldEpisode))
+			if(!episode.getFileOption().getCreateDirs() && !fixPermissions(oldEpisode))
 			{
 				throw new FileMoveException("Can't set the file as readable and writable.");
 			}
@@ -95,7 +95,7 @@ public class FileMover
 		return success;
 	}
 
-	public class FileMoveException extends Exception
+	public static class FileMoveException extends Exception
 	{
 		public FileMoveException(String message)
 		{
@@ -117,11 +117,16 @@ public class FileMover
 		MOVE(true),
 		COPY(true),
 		NOTHING(false);
-		public boolean createDirs;
+		private boolean createDirs;
 
 		FileOption(boolean createDirs)
 		{
 			this.createDirs = createDirs;
+		}
+		
+		public boolean getCreateDirs()
+		{
+			return createDirs;
 		}
 	};
 }

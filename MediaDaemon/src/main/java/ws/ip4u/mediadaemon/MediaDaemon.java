@@ -20,6 +20,9 @@ public class MediaDaemon
 {
 	private static Log log = LogFactory.getLog(MediaDaemon.class);
 
+	private MediaDaemon()
+	{
+	}
 
 	public static void main(String[] args)
 	{

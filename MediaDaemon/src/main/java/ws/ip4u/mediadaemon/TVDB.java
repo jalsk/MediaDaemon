@@ -31,7 +31,7 @@ public class TVDB
 {
 	private Log log = LogFactory.getLog(TVDB.class);
 	private String apikey;
-	private String mirrorPath;
+//	private String mirrorPath;
 	private Client client;
 	private WebResource service;
 	private DocumentBuilder parser;
@@ -49,7 +49,7 @@ public class TVDB
 		Document doc = parser.parse(new ByteArrayInputStream(mirrors.getBytes()));
 
 		Node mirrorPathNode = doc.getElementsByTagName("mirrorpath").item(0);
-		mirrorPath = mirrorPathNode.getNodeValue();
+//		mirrorPath = mirrorPathNode.getNodeValue();
 	}
 
 	public void updateSeriesInformation(Series series)
@@ -201,7 +201,7 @@ public class TVDB
 		return textVal;
 	}
 
-	private class SeriesLookupException extends Exception
+	private static class SeriesLookupException extends Exception
 	{
 		public SeriesLookupException(String message)
 		{

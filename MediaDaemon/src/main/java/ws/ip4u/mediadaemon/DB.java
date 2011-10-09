@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 /**
  *
  * @author jalsk
@@ -13,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
 public class DB
 {
 	private Connection conn;
-	private Log log = LogFactory.getLog(DB.class);
+//	private Log log = LogFactory.getLog(DB.class);
 	private static final String DB_TBL_EPISODES = "episodes";
 	private static final String DB_TBL_SEASON = "season";
 	private static final String DB_TBL_SERIES = "series";
@@ -21,15 +23,27 @@ public class DB
 	public DB(String dbPath) throws SQLException
 	{
 		conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
-
+		createTables();
 	}
 
 	private void createTables() throws SQLException
 	{
-		Statement stmt = conn.createStatement();
+		Statement stmt = null;
 
-		stmt.executeUpdate("create table " + DB_TBL_SERIES +   " (id, name, path, noRename);");
-		stmt.executeUpdate("create table " + DB_TBL_SEASON +   " (id, seriesid, number, path);");
-		stmt.executeUpdate("create table " + DB_TBL_EPISODES + " (id, seasonid, name, number, season, path, filename);");
+		try
+		{
+			stmt = conn.createStatement();
+
+			stmt.executeUpdate("create table " + DB_TBL_SERIES + " (id, name, path, noRename);");
+			stmt.executeUpdate("create table " + DB_TBL_SEASON + " (id, seriesid, number, path);");
+			stmt.executeUpdate("create table " + DB_TBL_EPISODES + " (id, seasonid, name, number, season, path, filename);");
+		}
+		finally
+		{
+			if(stmt != null)
+			{
+				stmt.close();
+			}
+		}
 	}
 }

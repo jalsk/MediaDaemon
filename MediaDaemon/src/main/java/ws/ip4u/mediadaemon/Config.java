@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -258,7 +259,7 @@ public class Config
 		return ret;
 	}
 
-	public class ConfigException extends Exception
+	public static class ConfigException extends Exception
 	{
 		public ConfigException(String message)
 		{
@@ -271,7 +272,7 @@ public class Config
 		}
 	}
 
-	public class ConfigTestingException extends Exception
+	public static class ConfigTestingException extends Exception
 	{
 		public ConfigTestingException(String message)
 		{
@@ -285,7 +286,7 @@ public class Config
 	}
 
 	//<editor-fold defaultstate="collapsed" desc="Configuration Validator">
-	class ConfigurationValidator
+	static class ConfigurationValidator
 	{
 		public void validate(String input) throws ValidationException
 		{
@@ -371,7 +372,7 @@ public class Config
 			return sb.toString();
 		}
 
-		public class ValidationException extends Exception
+		public static class ValidationException extends Exception implements Serializable
 		{
 			public ValidationException(String message)
 			{
