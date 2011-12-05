@@ -31,7 +31,6 @@ public class TVDB
 	private Log log = LogFactory.getLog(TVDB.class);
 	private String apikey;
 //	private String mirrorPath;
-	private Client client;
 	private WebResource service;
 	private DocumentBuilder parser;
 
@@ -39,8 +38,7 @@ public class TVDB
 	public TVDB(String apikey) throws ParserConfigurationException, SAXException, IOException
 	{
 		this.apikey = apikey;
-		client = Client.create();
-		service = client.resource("http://www.thetvdb.com/api");
+		service = Client.create().resource("http://www.thetvdb.com/api");
 //		String mirrors = service.path(this.apikey + "/mirrors.xml").accept(MediaType.TEXT_XML).get(String.class);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
