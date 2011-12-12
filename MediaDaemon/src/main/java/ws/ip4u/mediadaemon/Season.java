@@ -16,12 +16,14 @@ public class Season
 	private Log log = LogFactory.getLog(Season.class);
 	private Integer seasonId;
 	private int seasonNumber;
+	private int seriesId;
 	private Map<Integer, Episode> episodes;
 	private static final String SEASON = "Season ";
 
-	public Season(int seasonNumber)
+	public Season(int seasonNumber, int seriesId)
 	{
 		this.seasonNumber = seasonNumber;
+		this.seriesId = seriesId;
 		episodes = Maps.newHashMap();
 	}
 
@@ -60,6 +62,16 @@ public class Season
 	public String getSeasonName()
 	{
 		return SEASON + seasonNumber;
+	}
+
+	public int getSeasonNumber()
+	{
+		return seasonNumber;
+	}
+
+	public int getSeriesId()
+	{
+		return seriesId;
 	}
 
 	@Override

@@ -18,6 +18,8 @@ public class Series
 	private String showName;
 	private Map<Integer, Season> seasons;
 	private String basePath;
+	private boolean rename;
+	private String path;
 
 	public Series(String showName, String basePath)
 	{
@@ -37,7 +39,7 @@ public class Series
 		Season s;
 		if(!seasons.containsKey(number))
 		{
-			s = new Season(number);
+			s = new Season(number, seriesId);
 			seasons.put(number, s);
 		}
 		else
@@ -67,6 +69,21 @@ public class Series
 	public Integer getSeriesId()
 	{
 		return seriesId;
+	}
+
+	public void setRename(boolean rename)
+	{
+		this.rename = rename;
+	}
+
+	public boolean getRename()
+	{
+		return rename;
+	}
+
+	public String getPath()
+	{
+		return basePath;
 	}
 
 	@Override
