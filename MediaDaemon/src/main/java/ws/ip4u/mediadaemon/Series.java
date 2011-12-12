@@ -19,7 +19,7 @@ public class Series
 	private Map<Integer, Season> seasons;
 	private String basePath;
 	private boolean rename;
-	private String path;
+//	private String path;
 
 	public Series(String showName, String basePath)
 	{
