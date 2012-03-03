@@ -2,11 +2,7 @@ package ws.ip4u.mediadaemon;
 
 import com.google.common.collect.Lists;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 /**
@@ -35,9 +31,9 @@ public class DB
 		{
 			stmt = conn.createStatement();
 
-			stmt.executeUpdate("create table " + DB_TBL_SERIES + " (id, name, path, rename);");
-			stmt.executeUpdate("create table " + DB_TBL_SEASON + " (id, seriesid, number, path);");
-			stmt.executeUpdate("create table " + DB_TBL_EPISODES + " (id, seasonid, name, number, season, path, filename);");
+			createIfNotExists(stmt, DB_TBL_SERIES, "id, name, path, rename");
+			createIfNotExists(stmt, DB_TBL_SEASON, "id, seriesid, number, path");
+			createIfNotExists(stmt, DB_TBL_EPISODES, "id, seasonid, name, number, season, path, filename");
 		}
 		finally
 		{
@@ -45,6 +41,14 @@ public class DB
 			{
 				stmt.close();
 			}
+		}
+	}
+
+	private void createIfNotExists(Statement stmt, String tableName, String columns) throws SQLException
+	{
+		if(stmt.executeQuery("select name from sqlite_master where type='table' and name='" + tableName + "';").getString("name") != null)
+		{
+			stmt.executeUpdate("create table " + tableName + " (" + columns + ");");
 		}
 	}
 
@@ -144,5 +148,30 @@ public class DB
 			if(stmt != null)
 				stmt.close();
 		}
+	}
+
+	// Grab all series from the database, pull it into a cache
+	public List<Series> grabAllSeries() throws SQLException
+	{
+		return Lists.newArrayList();
+	}
+
+	// Grab existing data from database
+	public Series getSeries(int seriesNumber) throws SQLException
+	{
+		PreparedStatement stmt = null;
+		Series series = null;
+
+		try
+		{
+
+		}
+		finally
+		{
+			if(stmt != null)
+				stmt.close();
+		}
+
+		return series;
 	}
 }
