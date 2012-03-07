@@ -1,15 +1,26 @@
+/**
+ *  This file is part of MediaDaemon.
+ *
+ *  MediaDaemon is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  MediaDaemon is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with MediaDaemon.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ws.ip4u.mediadaemon;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +37,7 @@ public class Config
 	private static final String DEFAULT_API_KEY = "8495C6D0B9081C3C";
 	private static final String DEFAULT_SEARCH_PATH = "/Users/jalsk/Movies/mediaTest/";
 	private static final String DEFAULT_TORRENT_PATH = "/Users/jalsk/torrents/torrents/";
+	private static final String DEFAULT_DB_PATH = "/Users/jalsk/dev/github/MediaDaemon/tvdb.sqlite";
 
 	//<editor-fold defaultstate="collapsed" desc="ConfigOptions enum">
 	protected enum ConfigOptions
@@ -39,7 +51,8 @@ public class Config
 		PRETEND("pretend", "p", false, "don't actually do anything, just tell what would happen", false, "pretend"),
 		TEST_CONFIG("testConfig", "td", false, "test the config for the specified config file", false, "test config"),
 		SCAN_FREQUENCY("scanFrequency", "sf", true, "how frequently we should scan the directories for changes", true, "scan frequency"),
-		DAEMON("daemon", "d", false, "whether we are running in daemon mode", true, "daemon");
+		DAEMON("daemon", "d", false, "whether we are running in daemon mode", true, "daemon"),
+		DB_PATH("dbPath", "db", true, "path to the SQLite DB file", true, "SQLite DB File Path");
 		private String name;
 		private String shortName;
 		private boolean requiredParam;
@@ -88,7 +101,7 @@ public class Config
 		}
 	};
 	//</editor-fold>
-	private String searchPath = null, torrentPath = null, apiKey = null;
+	private String searchPath = null, torrentPath = null, apiKey = null, dbPath = null;
 	private boolean pretend = false, daemon = false;
 	private int scanFrequency;
 
@@ -201,6 +214,15 @@ public class Config
 			{
 				daemon = true;
 			}
+
+			if(cmd.hasOption(ConfigOptions.DB_PATH.shortName))
+			{
+				dbPath = cmd.getOptionValue(ConfigOptions.DB_PATH.shortName);
+			}
+			else
+			{
+				dbPath = DEFAULT_DB_PATH;
+			}
 		}
 		catch(IOException e)
 		{
@@ -244,6 +266,11 @@ public class Config
 	public int getScanFrequency()
 	{
 		return scanFrequency;
+	}
+
+	public String getDbPath()
+	{
+		return dbPath;
 	}
 
 	private static String[] parseString(String input)
@@ -300,8 +327,8 @@ public class Config
 				throw new ValidationException("Configuration file must contain key-value pairs separated by '='");
 			}
 
-			String key = input.substring(0, input.indexOf('='));
-			String value = input.substring(input.indexOf('=') + 1);
+			String key = input.substring(0, input.indexOf('=')).trim();
+			String value = input.substring(input.indexOf('=') + 1).trim();
 
 			if(key.isEmpty())
 			{
@@ -351,6 +378,7 @@ public class Config
 												  + "Tested path: " + value);
 				}
 			}
+
 		}
 
 		private String getValidKeyValues()

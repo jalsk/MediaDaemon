@@ -1,3 +1,19 @@
+/**
+ *  This file is part of MediaDaemon.
+ *
+ *  MediaDaemon is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  MediaDaemon is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with MediaDaemon.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ws.ip4u.mediadaemon;
 
 import com.google.common.collect.Lists;
@@ -63,7 +79,7 @@ public class DB
 
 		try
 		{
-			stmt = conn.prepareStatement("insert into " + DB_TBL_SERIES + " values (?, ?, ?, ?)");
+			stmt = conn.prepareStatement("insert into " + DB_TBL_SERIES + " values (?, ?, ?, ?);");
 
 			for(Series s : series)
 			{
@@ -95,7 +111,7 @@ public class DB
 
 		try
 		{
-			stmt = conn.prepareStatement("insert into " + DB_TBL_SEASON + " values (?, ?, ?, ?)");
+			stmt = conn.prepareStatement("insert into " + DB_TBL_SEASON + " values (?, ?, ?, ?);");
 
 			for(Season s : seasons)
 			{
@@ -151,7 +167,7 @@ public class DB
 	}
 
 	// Grab all series from the database, pull it into a cache
-	public List<Series> grabAllSeries() throws SQLException
+	public List<Series> getAllSeries() throws SQLException
 	{
 		return Lists.newArrayList();
 	}
@@ -161,17 +177,54 @@ public class DB
 	{
 		PreparedStatement stmt = null;
 		Series series = null;
+		ResultSet rs = null;
 
 		try
 		{
+			SeriesFactory factory = new SeriesFactory();
 
+			rs = stmt.executeQuery("select * from " + DB_TBL_SERIES + " where seriesId = " + seriesNumber + ";");
+			series = factory.withBasePath(rs.getString("basePath"))
+							.withSeriesId(seriesNumber)
+							.withShowName("showName")
+							.build();
 		}
 		finally
 		{
+			if(rs != null)
+				rs.close();
 			if(stmt != null)
 				stmt.close();
 		}
 
 		return series;
+	}
+
+	public List<Season> getAllSeasons(int seriesId) throws SQLException
+	{
+		return Lists.newArrayList();
+	}
+
+	public Season getSeason(int seriesId, int seasonNumber) throws SQLException
+	{
+		return null;
+	}
+
+	public List<Episode> getEpisodes() throws SQLException
+	{
+		return Lists.newArrayList();
+	}
+
+	public Episode getEpisode() throws SQLException
+	{
+		return null;
+	}
+
+	public void updateAllSeries(List<Series> series) throws SQLException
+	{
+		for(Series s : series)
+		{
+			upsertSeries(s);
+		}
 	}
 }
