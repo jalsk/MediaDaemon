@@ -59,6 +59,8 @@ public final class MediaDaemon
 				api.updateSeriesInformation(show);
 			}
 
+			db.updateAllSeries(shows);
+
 			FileMover fm = new FileMover(new File(config.getShowPath()));
 			for(Series show : shows)
 			{

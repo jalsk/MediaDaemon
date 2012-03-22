@@ -62,9 +62,9 @@ public class DB
 
 	private void createIfNotExists(Statement stmt, String tableName, String columns) throws SQLException
 	{
-		if(stmt.executeQuery("select name from sqlite_master where type='table' and name='" + tableName + "';").getString("name") != null)
+		if(stmt.executeQuery(String.format("select name from sqlite_master where type='table' and name='%s';", tableName)).getString("name") != null)
 		{
-			stmt.executeUpdate("create table " + tableName + " (" + columns + ");");
+			stmt.executeUpdate(String.format("create table %s (%s);", tableName, columns));
 		}
 	}
 
@@ -183,7 +183,10 @@ public class DB
 		{
 			SeriesFactory factory = new SeriesFactory();
 
-			rs = stmt.executeQuery("select * from " + DB_TBL_SERIES + " where seriesId = " + seriesNumber + ";");
+			stmt = conn.prepareCall(String.format("select * from %s where seriesId = ?;", DB_TBL_SERIES));
+			stmt.setInt(1, seriesNumber);
+
+			rs = stmt.executeQuery();
 			series = factory.withBasePath(rs.getString("basePath"))
 							.withSeriesId(seriesNumber)
 							.withShowName("showName")
@@ -191,10 +194,8 @@ public class DB
 		}
 		finally
 		{
-			if(rs != null)
-				rs.close();
-			if(stmt != null)
-				stmt.close();
+			rs.close();
+			stmt.close();
 		}
 
 		return series;
