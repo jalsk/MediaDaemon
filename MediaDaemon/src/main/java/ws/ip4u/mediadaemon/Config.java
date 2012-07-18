@@ -35,9 +35,9 @@ public class Config
 {
 	private Log log = LogFactory.getLog(Config.class);
 	private static final String DEFAULT_API_KEY = "8495C6D0B9081C3C";
-	private static final String DEFAULT_SEARCH_PATH = "/Users/jalsk/Movies/mediaTest/";
-	private static final String DEFAULT_TORRENT_PATH = "/Users/jalsk/torrents/torrents/";
-	private static final String DEFAULT_DB_PATH = "/Users/jalsk/dev/github/MediaDaemon/tvdb.sqlite";
+	private static final String DEFAULT_SEARCH_PATH = "/home/jalsk/Movies/mediaTest/";
+	private static final String DEFAULT_TORRENT_PATH = "/home/jalsk/torrents/torrents/completed/";
+	private static final String DEFAULT_DB_PATH = "/home/jalsk/projects/MediaDaemon/MediaDaemon/tvdb.sqlite";
 
 	//<editor-fold defaultstate="collapsed" desc="ConfigOptions enum">
 	protected enum ConfigOptions
