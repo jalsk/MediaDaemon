@@ -48,6 +48,7 @@ public class Episode
 			Pattern.compile("(.*)\\[(\\d+)x(\\d{2})\\](.*)\\.([\\w]{3})$"),
 			Pattern.compile("(.*)\\.(\\d+)x(\\d{2})(.*)\\.([\\w]{3})$"));
 	private FileOption fileOption;
+	private static final List<String> nonCapitalizedWords = Arrays.asList("of", "and", "to");
 
 	// Data/Episode/id
 	// Data/Episode/EpisodeNumber
@@ -58,10 +59,10 @@ public class Episode
 		this.parentDir = parentDir;
 		this.filename = filename;
 		this.fileOption = fileOption;
-		if(!(new File(parentDir, filename)).isFile())
-		{
-			throw new EpisodeNotMatchedException("Specified item is not a file.");
-		}
+//		if(!(new File(parentDir, filename)).isFile())
+//		{
+//			throw new EpisodeNotMatchedException("Specified item is not a file.");
+//		}
 		boolean matched = false;
 		for(Pattern regex : renameEpisodeRegex)
 		{
@@ -72,6 +73,7 @@ public class Episode
 				this.needsRenamed = true;
 				this.episodeSeason = Integer.parseInt(m.group(2));
 				this.episodeNumber = Integer.parseInt(m.group(3));
+				this.episodeName = "";
 				this.extension = m.group(5);
 				matched = true;
 				break;
@@ -224,26 +226,28 @@ public class Episode
 				this.filename,
 				getFormattedName());
 	}
-
+	
 	private String capitalizeString(String tmp)
 	{
-		String temp = tmp.replaceAll("\\.", " ").trim().toLowerCase();
+		String temp = tmp.replaceAll("\\.", " ").trim();
 		String[] parts = temp.split(" ");
-		if(parts.length > 1)
+		if(parts.length >= 1)
 		{
 			for(int i = 0; i < parts.length; i++)
 			{
-				if(Character.isLetter(parts[i].charAt(0)))
+				if(Character.isLetter(parts[i].charAt(0)) && !nonCapitalizedWords.contains(parts[i]))
 				{
 					parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1);
 				}
 			}
 			StringBuilder sb = new StringBuilder();
+			String space = "";
 			for(String str : parts)
 			{
-				sb.append(str).append(' ');
+				sb.append(space).append(str);
+				space = " ";
 			}
-			temp = sb.toString().trim();
+			temp = sb.toString();
 		}
 		return temp;
 	}

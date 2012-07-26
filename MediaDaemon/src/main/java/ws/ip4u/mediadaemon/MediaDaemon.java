@@ -76,15 +76,7 @@ public final class MediaDaemon
 		{
 			log.info("Finished testing the config file. Exiting.");
 		}
-		catch(ParserConfigurationException e)
-		{
-			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage(), e);
-		}
-		catch(SAXException e)
-		{
-			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage(), e);
-		}
-		catch(IOException e)
+		catch(ParserConfigurationException | SAXException | IOException e)
 		{
 			log.error("Problem parsing data from the episode information provider.\n" + e.getMessage(), e);
 		}

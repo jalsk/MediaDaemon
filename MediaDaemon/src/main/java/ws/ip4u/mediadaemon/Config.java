@@ -384,17 +384,17 @@ public class Config
 		private String getValidKeyValues()
 		{
 			StringBuilder sb = new StringBuilder();
+			
+			String sep = "";
 
 			for(ConfigOptions co : ConfigOptions.values())
 			{
 				if(co.getInConfig())
 				{
-					sb.append(co.getName()).append(", ");
+					sb.append(sep).append(co.getName());
+					sep = ", ";
 				}
 			}
-
-			sb.deleteCharAt(sb.length() - 1); // get rid of the last two characters (the comma and space)
-			sb.deleteCharAt(sb.length() - 1);
 
 			return sb.toString();
 		}
