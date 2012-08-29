@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -27,25 +28,13 @@ public class ScannerTest
 	@BeforeClass
 	public static void setUp() throws FileNotFoundException, IOException
 	{
-//		InputStreamReader fr = null;
-//		BufferedReader br = null;
-//		try
-//		{
-//			fr = new InputStreamReader(ScannerTest.class.getResourceAsStream("testNames.txt"));
-//			br = new BufferedReader(fr);
-//
-//			String line;
-//			while ((line = br.readLine()) != null)
-//			{
-//				EPISODE_NAMES.add(line);
-//			}
-//		}
-//		finally
-//		{
-//			IOUtils.closeQuietly(fr);
-//			IOUtils.closeQuietly(br);
-//		}
-		
+		List<String> lines = readLines("testNames.txt");
+
+		for (String line : lines)
+		{
+			EPISODE_NAMES.add(line);
+		}
+
 		MAPPINGS.add(Pair.with("30.Rock.S06E18.HDTV.x264-LOL.mp4", "30 Rock [6x18] .mp4"));
 		MAPPINGS.add(Pair.with("Alphas.S01E07.Catch.and.Release.HDTV.XviD-FQM.[VTV].avi", "Alphas [1x07] .avi"));
 		MAPPINGS.add(Pair.with("CSI.Miami.S07E22.HDTV.XviD-LOL.avi", "CSI Miami [7x22] .avi"));
@@ -54,7 +43,7 @@ public class ScannerTest
 		MAPPINGS.add(Pair.with("Lie.to.Me.S02E04.HDTV.XviD-NoTV.[VTV].avi", "Lie to Me [2x04] .avi"));
 		MAPPINGS.add(Pair.with("The.Big.Bang.Theory.S03E01.HDTV.XviD-NoTV.avi", "The Big Bang Theory [3x01] .avi"));
 	}
-	
+
 	@Test
 	public void testFileRecognitionAndRenaming() throws EpisodeNotMatchedException
 	{
@@ -63,5 +52,10 @@ public class ScannerTest
 			Episode e = new Episode(pair.getValue0(), null, FileMover.FileOption.NOTHING);
 			assertEquals(pair.getValue1(), e.getFormattedName());
 		}
+	}
+	
+	private static List<String> readLines(String filename) throws IOException
+	{
+		return IOUtils.readLines(ScannerTest.class.getClassLoader().getResourceAsStream(filename));
 	}
 }
