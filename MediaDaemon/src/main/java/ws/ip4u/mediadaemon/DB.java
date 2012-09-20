@@ -1,18 +1,15 @@
 /**
- *  This file is part of MediaDaemon.
+ * This file is part of MediaDaemon.
  *
- *  MediaDaemon is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * MediaDaemon is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- *  MediaDaemon is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * MediaDaemon is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with MediaDaemon.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with MediaDaemon. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package ws.ip4u.mediadaemon;
 
@@ -41,28 +38,18 @@ public class DB
 
 	private void createTables() throws SQLException
 	{
-		Statement stmt = null;
-
-		try
+		try (Statement stmt = conn.createStatement())
 		{
-			stmt = conn.createStatement();
 
 			createIfNotExists(stmt, DB_TBL_SERIES, "id, name, path, rename");
 			createIfNotExists(stmt, DB_TBL_SEASON, "id, seriesid, number, path");
 			createIfNotExists(stmt, DB_TBL_EPISODES, "id, seasonid, name, number, season, path, filename");
 		}
-		finally
-		{
-			if(stmt != null)
-			{
-				stmt.close();
-			}
-		}
 	}
 
 	private void createIfNotExists(Statement stmt, String tableName, String columns) throws SQLException
 	{
-		if(stmt.executeQuery(String.format("select name from sqlite_master where type='table' and name='%s';", tableName)).getString("name") != null)
+		if (stmt.executeQuery(String.format("select name from sqlite_master where type='table' and name='%s';", tableName)).getString("name") != null)
 		{
 			stmt.executeUpdate(String.format("create table %s (%s);", tableName, columns));
 		}
@@ -75,13 +62,9 @@ public class DB
 
 	public boolean upsertSeries(List<Series> series) throws SQLException
 	{
-		PreparedStatement stmt = null;
-
-		try
+		try (PreparedStatement stmt = conn.prepareStatement("insert into " + DB_TBL_SERIES + " values (?, ?, ?, ?);"))
 		{
-			stmt = conn.prepareStatement("insert into " + DB_TBL_SERIES + " values (?, ?, ?, ?);");
-
-			for(Series s : series)
+			for (Series s : series)
 			{
 				stmt.setInt(1, s.getSeriesId());
 				stmt.setString(2, s.getShowName());
@@ -93,11 +76,6 @@ public class DB
 
 			return stmt.execute();
 		}
-		finally
-		{
-			if(stmt != null)
-				stmt.close();
-		}
 	}
 
 	public boolean upsertSeason(Season season) throws SQLException
@@ -107,13 +85,10 @@ public class DB
 
 	public boolean upsertSeason(List<Season> seasons) throws SQLException
 	{
-		PreparedStatement stmt = null;
-
-		try
+		try (PreparedStatement stmt = conn.prepareStatement("insert into " + DB_TBL_SEASON + " values (?, ?, ?, ?);"))
 		{
-			stmt = conn.prepareStatement("insert into " + DB_TBL_SEASON + " values (?, ?, ?, ?);");
 
-			for(Season s : seasons)
+			for (Season s : seasons)
 			{
 				stmt.setInt(1, s.getSeasonId());
 				stmt.setInt(2, s.getSeriesId());
@@ -125,11 +100,6 @@ public class DB
 
 			return stmt.execute();
 		}
-		finally
-		{
-			if(stmt != null)
-				stmt.close();
-		}
 	}
 
 	public boolean upsertEpisode(Episode episode) throws SQLException, IOException
@@ -139,13 +109,9 @@ public class DB
 
 	public boolean upsertEpisodes(List<Episode> episodes) throws SQLException, IOException
 	{
-		PreparedStatement stmt = null;
-
-		try
+		try (PreparedStatement stmt = conn.prepareStatement("insert into " + DB_TBL_EPISODES + " values (?, ?, ?, ?, ?, ?, ?);"))
 		{
-			stmt = conn.prepareStatement("insert into " + DB_TBL_EPISODES + " values (?, ?, ?, ?, ?, ?, ?);");
-
-			for(Episode episode : episodes)
+			for (Episode episode : episodes)
 			{
 				stmt.setInt(1, episode.getId());
 				stmt.setInt(2, episode.getSeriesId());
@@ -158,11 +124,6 @@ public class DB
 				stmt.addBatch();
 			}
 			return stmt.execute();
-		}
-		finally
-		{
-			if(stmt != null)
-				stmt.close();
 		}
 	}
 
@@ -188,9 +149,9 @@ public class DB
 
 			rs = stmt.executeQuery();
 			series = factory.withBasePath(rs.getString("basePath"))
-							.withSeriesId(seriesNumber)
-							.withShowName("showName")
-							.build();
+					.withSeriesId(seriesNumber)
+					.withShowName("showName")
+					.build();
 		}
 		finally
 		{
@@ -223,7 +184,7 @@ public class DB
 
 	public void updateAllSeries(List<Series> series) throws SQLException
 	{
-		for(Series s : series)
+		for (Series s : series)
 		{
 			upsertSeries(s);
 		}

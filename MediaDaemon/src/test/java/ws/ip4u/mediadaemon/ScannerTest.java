@@ -1,19 +1,14 @@
 package ws.ip4u.mediadaemon;
 
 import com.google.common.collect.Lists;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.javatuples.Pair;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 import ws.ip4u.mediadaemon.Episode.EpisodeNotMatchedException;
 
 /**
