@@ -52,7 +52,7 @@ public final class MediaDaemon
 			Scanner sc = new Scanner(config.getShowPath(), config.getTorrentPath(), config.isPretend());
 			List<Series> shows = sc.getShows();
 
-			TVDB api = new TVDB(config.getApiKey());
+			TVDB api = new TVDB(config.getApiKey(), db);
 
 			for(Series show : shows)
 			{

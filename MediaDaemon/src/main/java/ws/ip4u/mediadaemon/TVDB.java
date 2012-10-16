@@ -16,6 +16,8 @@
  */
 package ws.ip4u.mediadaemon;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
@@ -23,9 +25,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,23 +51,75 @@ public class TVDB
 {
 	private Log log = LogFactory.getLog(TVDB.class);
 	private String apikey;
-//	private String mirrorPath;
+	private Map<ResourceType, List<String>> mirrors;
 	private WebResource service;
 	private DocumentBuilder parser;
+	private int serverTime;
+	private DB db;
+
+	enum ResourceType
+	{
+		XML_FILE(1),
+		BANNER_FILE(2),
+		ZIP_FILE(4);
+		int typeMask;
+
+		ResourceType(int typeMask)
+		{
+			this.typeMask = typeMask;
+		}
+	}
 
 	// TODO: change this so that it uses the mirror and caches the data locally until it is expired.
-	public TVDB(String apikey) throws ParserConfigurationException, SAXException, IOException
+	public TVDB(String apikey, DB db) throws ParserConfigurationException, SAXException, IOException
 	{
 		this.apikey = apikey;
+		this.db = db;
 		service = Client.create().resource("http://www.thetvdb.com/api");
-//		String mirrors = service.path(this.apikey + "/mirrors.xml").accept(MediaType.TEXT_XML).get(String.class);
+		String mirrorsXml = service.path(this.apikey + "/mirrors.xml").accept(MediaType.TEXT_XML).get(String.class);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		parser = factory.newDocumentBuilder();
-//		Document doc = parser.parse(new ByteArrayInputStream(mirrors.getBytes()));
+		Document doc = parser.parse(new ByteArrayInputStream(mirrorsXml.getBytes()));
 
-//		Node mirrorPathNode = doc.getElementsByTagName("mirrorpath").item(0);
-//		mirrorPath = mirrorPathNode.getNodeValue();
+		NodeList mirrorsList = doc.getElementsByTagName("Mirrors");
+		mirrors = Maps.newEnumMap(ResourceType.class);
+
+		for (int i = 0; i < mirrorsList.getLength(); i++)
+		{
+			Node mirrorNode = mirrorsList.item(i);
+			NodeList attributes = mirrorNode.getChildNodes();
+			String mirrorPath = null;
+			int typeMask = 0;
+			for (int j = 0; j < attributes.getLength(); j++)
+			{
+				Node attrib = attributes.item(j);
+				switch (attrib.getLocalName())
+				{
+					case "mirrorpath":
+						mirrorPath = attrib.getNodeValue();
+						break;
+					case "typemask":
+						typeMask = Integer.parseInt(attrib.getNodeValue());
+						break;
+				}
+			}
+			if (mirrorPath != null)
+			{
+				for (ResourceType resourceType : ResourceType.values())
+				{
+					if ((resourceType.typeMask & typeMask) == 1)
+					{
+						if (!mirrors.containsKey(resourceType))
+						{
+							mirrors.put(resourceType, Lists.<String>newArrayList());
+						}
+
+						mirrors.get(resourceType).add(mirrorPath);
+					}
+				}
+			}
+		}
 	}
 
 	public void updateSeriesInformation(Series series)
@@ -78,6 +135,7 @@ public class TVDB
 			ZipEntry entry;
 			Document xmlDoc = null;
 			Enumeration enumeration = zipFile.entries();
+
 			while (enumeration.hasMoreElements())
 			{
 				entry = (ZipEntry) enumeration.nextElement();
@@ -123,15 +181,15 @@ public class TVDB
 		{
 			log.fatal("Problem parsing data from the episode information provider.\n" + e.getMessage());
 		}
-		catch(ZipException e)
+		catch (ZipException e)
 		{
 			log.fatal("Problem handling the zip file.\n" + e.getMessage());
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
 			log.fatal("There was a problem with I/O.\n" + e.getMessage());
 		}
-		catch(SAXException e)
+		catch (SAXException e)
 		{
 			log.fatal("There was a problem parsing the XML File.\n" + e.getMessage());
 		}
